@@ -98,10 +98,14 @@ class Provider extends AbstractProvider implements ProviderInterface
         $response = $this->getHttpClient()->get($this->getTokenUrl(), [
             'query' => $this->getTokenFields($code),
         ]);
+        $contents = $response->getBody()->getContents();
+        parse_str($contents, $results);
+        $this->credentialsResponseBody = $results;
+        return $contents;
+        
+        // $this->credentialsResponseBody = json_decode($response->getBody(), true);
 
-        $this->credentialsResponseBody = json_decode($response->getBody(), true);
-
-        return $response->getBody()->getContents();
+        // return $response->getBody()->getContents();
     }
 
     /**
